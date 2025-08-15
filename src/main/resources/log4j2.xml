@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logPath">logs</Property>
+        <Property name="currentFile">${sys:user.dir}/${logPath}/hippodrome.log</Property>
+        <Property name="archivePattern">${sys:user.dir}/${logPath}/hippodrome.%d{yyyy-MM-dd}.log</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="File"
+                     fileName="${currentFile}"
+                     filePattern="${archivePattern}"
+                     append="true"
+                     createOnDemand="true"
+                     immediateFlush="true">
+
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %c{1}: %msg%n"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+
+            <DefaultRolloverStrategy>
+                <Delete basePath="${sys:user.dir}/${logPath}" maxDepth="1">
+                    <IfFileName glob="hippodrome.????-??-??.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
